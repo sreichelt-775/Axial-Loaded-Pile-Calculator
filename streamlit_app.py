@@ -98,21 +98,57 @@ if r["u_exact_m"] is None:
 
 
 def profile_plot(x, x_exact, title, xaxis):
+    """White plot panels with explicitly dark labels, ticks, axes, and gridlines.
+
+    Explicit font settings are important because the overall Streamlit page
+    may be using a dark theme. Blue solid and red dashed/outlined markers
+    distinguish the curves without relying on color alone.
+    """
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=x, y=z, name="FDA numerical",
-                             mode="lines+markers", marker=dict(size=4),
-                             line=dict(width=3, color="#185a88"),
-                             hovertemplate="%{x:.7g}<br>Depth: %{y:.3f} m<extra>FDA</extra>"))
+    fig.add_trace(go.Scatter(
+        x=x, y=z, name="FDA numerical (solid)", mode="lines",
+        line=dict(width=3.5, color="#15558A"),
+        hovertemplate="%{x:.7g}<br>Depth: %{y:.3f} m<extra>FDA</extra>",
+    ))
     if x_exact is not None:
-        fig.add_trace(go.Scatter(x=x_exact, y=z, name="Exact analytical",
-                                 mode="lines", line=dict(width=2.5, color="#df9128", dash="dash"),
-                                 hovertemplate="%{x:.7g}<br>Depth: %{y:.3f} m<extra>Exact</extra>"))
-    fig.update_layout(title=title, xaxis_title=xaxis, yaxis_title="Depth (m)",
-                      yaxis=dict(autorange="reversed", gridcolor="#e7edf5"),
-                      xaxis=dict(gridcolor="#e7edf5", zeroline=True),
-                      margin=dict(l=30, r=20, t=55, b=45),
-                      legend=dict(orientation="h", x=0, y=1.12),
-                      height=495, paper_bgcolor="white", plot_bgcolor="white")
+        fig.add_trace(go.Scatter(
+            x=x_exact, y=z, name="Exact analytical (dashed)", mode="lines",
+            line=dict(width=2.8, color="#B42318", dash="dash"),
+            hovertemplate="%{x:.7g}<br>Depth: %{y:.3f} m<extra>Exact</extra>",
+        ))
+        # A few open squares reveal the analytical curve when the two lines
+        # almost completely overlap (as expected in a converged solution).
+        step = max(1, len(z) // 13)
+        fig.add_trace(go.Scatter(
+            x=x_exact[::step], y=z[::step], mode="markers",
+            marker=dict(symbol="square-open", size=8, color="#B42318",
+                        line=dict(color="#B42318", width=1.5)),
+            showlegend=False, hoverinfo="skip",
+        ))
+
+    axis_style = dict(
+        showline=True, linewidth=1.8, linecolor="#111827", mirror=True,
+        ticks="outside", ticklen=6, tickwidth=1.6, tickcolor="#111827",
+        tickfont=dict(size=14, color="#111827"),
+        title_font=dict(size=16, color="#111827"),
+        showgrid=True, gridcolor="#C5CCD6", gridwidth=1,
+        zeroline=True, zerolinecolor="#64748B", zerolinewidth=1.3,
+    )
+    fig.update_layout(
+        template="plotly_white",
+        title=dict(text=title, font=dict(size=19, color="#111827"), x=0.03, y=0.98),
+        xaxis=dict(**axis_style, title=xaxis, rangemode="tozero"),
+        yaxis=dict(**axis_style, title="Depth (m)", autorange="reversed"),
+        font=dict(family="Arial, sans-serif", size=14, color="#111827"),
+        legend=dict(orientation="h", x=0.0, y=1.14, yanchor="bottom",
+                    bgcolor="rgba(255,255,255,0.97)",
+                    font=dict(color="#111827", size=13)),
+        margin=dict(l=65, r=28, t=95, b=70),
+        height=550, paper_bgcolor="white", plot_bgcolor="white",
+        hoverlabel=dict(bgcolor="white", font_color="#111827", font_size=14),
+    )
+    if "k₀" in xaxis:
+        fig.update_xaxes(tickformat=",.0f")
     return fig
 
 c1,c2 = st.columns(2)
@@ -124,12 +160,15 @@ with c2:
     st.plotly_chart(profile_plot(r["F_kN"], r["F_exact_kN"],
                                 "Axial force vs. depth", "Axial force (kN)"), use_container_width=True)
 
+st.caption("Solid blue = finite differences; dashed red / open squares = analytical solution. Nearly overlapping curves indicate close agreement for the constant-stiffness example.")
+
 with st.expander("View pile, soil, and transfer details", expanded=False):
     cc1,cc2,cc3,cc4 = st.columns(4)
     cc1.metric("Pipe cross-section", f"{params.area:.5f} m²")
     cc2.metric("EA", f"{params.EA:,.0f} kN")
     cc3.metric("Pile-tip area (plugged)", f"{params.toe_area:.5f} m²")
     cc4.metric("Toe spring stiffness", "Fixed" if base == "fixed" else f"{params.kend:,.5g} kN/m")
+    st.caption("A vertical shaft-stiffness line is expected when the constant stiffness option is selected.")
     ss1,ss2 = st.columns(2)
     with ss1:
         st.plotly_chart(profile_plot(r["kf_kPa_per_m"], None, "Shaft stiffness profile", "k₀(z) (kPa/m)"), use_container_width=True)
