@@ -167,7 +167,7 @@ def profile_plot(x, x_exact, title, xaxis):
         legend=dict(
             orientation="h",
             x=0.03,
-            y=1.10,
+            y=1.15,
             xanchor="left",
             yanchor="top",
             bgcolor="rgba(255,255,255,1)",
