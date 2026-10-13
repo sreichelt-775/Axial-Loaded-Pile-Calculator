@@ -136,16 +136,67 @@ def profile_plot(x, x_exact, title, xaxis):
     )
     fig.update_layout(
         template="plotly_white",
-        title=dict(text=title, font=dict(size=19, color="#111827"), x=0.03, y=0.98),
-        xaxis=dict(**axis_style, title=xaxis, rangemode="tozero"),
-        yaxis=dict(**axis_style, title="Depth (m)", autorange="reversed"),
-        font=dict(family="Arial, sans-serif", size=14, color="#111827"),
-        legend=dict(orientation="h", x=0.0, y=1.20, yanchor="bottom",
-                    bgcolor="rgba(255,255,255,0.97)",
-                    font=dict(color="#111827", size=13)),
-        margin=dict(l=65, r=28, t=95, b=70),
-        height=550, paper_bgcolor="white", plot_bgcolor="white",
-        hoverlabel=dict(bgcolor="white", font_color="#111827", font_size=14),
+
+        title=dict(
+            text=title,
+            font=dict(size=20, color="#111827"),
+            x=0.03,
+            y=0.97,
+            xanchor="left",
+            yanchor="top",
+        ),
+
+        xaxis=dict(
+            **axis_style,
+            title=xaxis,
+            rangemode="tozero",
+        ),
+
+        yaxis=dict(
+            **axis_style,
+            title="Depth (m)",
+            autorange="reversed",
+        ),
+
+        font=dict(
+            family="Arial, sans-serif",
+            size=14,
+            color="#111827",
+        ),
+
+        legend=dict(
+            orientation="h",
+            x=0.03,
+            y=1.10,
+            xanchor="left",
+            yanchor="top",
+            bgcolor="rgba(255,255,255,1)",
+            font=dict(size=13, color="#111827"),
+        ),
+
+        margin=dict(l=90, r=30, t=150, b=100),
+        height=600,
+
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+
+        hoverlabel=dict(
+            bgcolor="white",
+            font_color="#111827",
+            font_size=14,
+        ),
+    )
+
+    fig.update_xaxes(
+        title_font=dict(size=17, color="#111827"),
+        tickfont=dict(size=14, color="#111827"),
+        title_standoff=18,
+    )
+
+    fig.update_yaxes(
+        title_font=dict(size=17, color="#111827"),
+        tickfont=dict(size=14, color="#111827"),
+        title_standoff=18,
     )
     if "k₀" in xaxis:
         fig.update_xaxes(tickformat=",.0f")
