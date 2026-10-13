@@ -140,7 +140,7 @@ def profile_plot(x, x_exact, title, xaxis):
         xaxis=dict(**axis_style, title=xaxis, rangemode="tozero"),
         yaxis=dict(**axis_style, title="Depth (m)", autorange="reversed"),
         font=dict(family="Arial, sans-serif", size=14, color="#111827"),
-        legend=dict(orientation="h", x=0.0, y=1.14, yanchor="bottom",
+        legend=dict(orientation="h", x=0.0, y=1.20, yanchor="bottom",
                     bgcolor="rgba(255,255,255,0.97)",
                     font=dict(color="#111827", size=13)),
         margin=dict(l=65, r=28, t=95, b=70),
