@@ -33,7 +33,6 @@ PRESETS = {
 
 st.title("PileFDA")
 st.markdown("**Axial pile load-transfer analysis** · Finite-difference approximation vs. analytical solution")
-st.caption("Based on Prof. Ahmed Elgamal's 2026 axial-pile finite-difference handout and the 2025 exact-solution/Excel notes. Educational elastic model, not a construction-design certification.")
 
 with st.sidebar:
     st.header("Model inputs")
